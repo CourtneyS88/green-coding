@@ -13,7 +13,8 @@
 <main>
     <h2 style="color: white; background-color: #003366; margin-bottom: 2em;">VIBES</h2>
     <p th:unless="${reviews} and ${reviews.size()}">
-        <em style="color: white;">No vibes to display.</em>
+        <em style="color: purple
+        ;">No vibes to display.</em>
     </p>
     <div class="row">
         <div th:each="review : ${reviews}" class="col-md-6 mb-4">

@@ -19,7 +19,7 @@ public class Review extends AbstractEntity{
     @NotBlank(message = "City name is required.")
     private String city;
 
-    @NotBlank(message = "Comment is required.")
+    @NotBlank(message = "CommentRepository is required.")
     private String comment;
 
     @NotNull(message = "Rate is required.")
@@ -32,6 +32,10 @@ public class Review extends AbstractEntity{
     @NotNull(message = "Country name is required.")
     @JsonManagedReference
     private CountryInfo country;
+
+    // Inside Review.java
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     @ManyToMany
     @JsonManagedReference

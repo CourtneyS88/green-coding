@@ -2,6 +2,7 @@ package org.launchcode.artgallery.controllers;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.launchcode.artgallery.data.CommentRepository;
 import org.launchcode.artgallery.data.CountryInfoRepository;
 import org.launchcode.artgallery.data.ReviewRepository;
 import org.launchcode.artgallery.data.WeatherRepository;
@@ -74,13 +75,19 @@ public class ReviewsController {
     }
 
     // Corresponds to http://localhost:8080/artworks/details/1
+    @Autowired
+    private CommentRepository commentRepository;
+
     @GetMapping("/details/{reviewId}")
     public String displayArtworkDetailsPage(@PathVariable int reviewId, Model model, HttpSession session) {
         model.addAttribute("loggedIn", session.getAttribute("user") != null);
         Optional<Review> result = reviewRepository.findById(reviewId);
         if (result.isPresent()) {
             Review review = result.get();
+            List<Comment> comments = commentRepository.findByReviewId(reviewId); // Fetch comments
             model.addAttribute("review", review);
+            model.addAttribute("comments", comments);
+            model.addAttribute("commentForm", new Comment()); // Form to add new comments
             return "reviews/details";
         } else {
             return "reviews/index";
@@ -191,6 +198,36 @@ public class ReviewsController {
             }
         }
     }
+//    @GetMapping("/details/{reviewId}")
+//    public String displayArtworkDetailsPage(@PathVariable int reviewId, Model model, HttpSession session) {
+//        // ... existing code ...
+//
+//        Optional<Review> result = reviewRepository.findById(reviewId);
+//        if (result.isPresent()) {
+//            Review review = result.get();
+//            List<CommentRepository> comments = review.getComments();
+//            model.addAttribute("comments", comments); // Add comments to the model
+//            model.addAttribute("commentForm", new CommentRepository()); // Form to add new comments
+//            return "reviews/details";
+//        } else {
+//            return "reviews/index";
+//        }
+//    }
+
+//    @PostMapping("/details/{reviewId}/addComment")
+//    public String addCommentToReview(@PathVariable int reviewId, @ModelAttribute CommentRepository comment) {
+//        Optional<Review> result = reviewRepository.findById(reviewId);
+//        if (result.isPresent()) {
+//            Review review = result.get();
+//            if (review.getComments() == null) {
+//                review.setComments(new ArrayList<>());
+//            }
+//            comment.setReview(review);
+//            review.getComments().add(comment);
+//            reviewRepository.save(review);
+//        }
+//        return "redirect:/reviews/details/" + reviewId;
+//    }
 
 
 
